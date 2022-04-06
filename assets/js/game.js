@@ -2,6 +2,34 @@ var randomNumber = function (min, max) {
     var value = Math.floor(Math.random() * (max-min +1) + min);
     return value;
 };
+var fightOrSkip = function () {
+    //ask player if they'd like to fight or skip using fightOrSKip function
+    var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+
+    //Conditional recursive function call here!
+    if (promptFight === "" || promptFight === null) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    //if player picks 'skip' confirm and then stop the loop
+    promptFight = promptFight.toLowerCase();
+    if (promptFight === "skip") {
+        //confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+        //if yes (true), leave fight
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has decided to skip this fight. Good bye!");
+            // subtract money from playerMoney for skipping
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            
+            //return true if player wants to leave
+            return true;
+        }
+    }
+    return false;
+}
 var fight = function (enemy) {
     //repeat and execute as long as the enemy-robot is alive
     while (playerInfo.health > 0 && enemy.health > 0) {
@@ -65,7 +93,7 @@ var startGame = function () {
         if (playerInfo.health > 0) {
             //let the player know what round they are in. Remeber that arrays start at 0 so it needs to have 1 added to it
             window.alert("Welcome to Robot Gladiators! Round " + (i + 1));
-
+            
             //pick new enemy to fight based on the index of the enemyNames array
             var pickedEnemyObj = enemyInfo[i];
 
@@ -97,7 +125,7 @@ var startGame = function () {
     //after the loop ends, player is either out of health or enemies to fight, so run the endGame function
     endGame();
 };
-    var endGame = function () {
+var endGame = function () {
         window.alert("The game has now ended. Let's see how you did!");
         //if player is still alive, player wins!
         if (playerInfo.health > 0) {
@@ -115,22 +143,21 @@ var startGame = function () {
         else {
             window.alert("Thank you for playing Robot Gladiators! Come back soon!");
         }
-    };
+};
+
 var shop = function () {
     // ask player what they'd like to do
-    var shopOptionPrompt = window.prompt("Would you like to REFILL your health, UPGRADE your attack or LEAVE the store? Please enter one: 'REFILL, 'UPGRADE' or 'LEAVE' to make a choice.");
+    var shopOptionPrompt = window.prompt("Would you like to REFILL your health, UPGRADE your attack or LEAVE the store? Please enter one: 1 for REFILL, 2 for UPGRADE or 3 to LEAVE.");
+    shopOptionPrompt = parseInt(shopOptionPrompt);
     //use switch to carry out action
     switch (shopOptionPrompt) {
-        case "REFILL": 
-        case "refill":
+        case 1:
             playerInfo.refillHealth();
             break;
-        case "UPGRADE":
-        case "upgrade":
+        case 2:
             playerInfo.upgradeAttack();
             break;
-        case "LEAVE":
-        case "leave":
+        case 3:
             window.alert("Leaving the store.");
             //do nothing so function will end
             break;
@@ -142,9 +169,23 @@ var shop = function () {
             break;
     }
 } 
+/*END GAME FUNCTIONS*/
 
+//function to set name
+var getPlayerName = function () {
+    var name = "";
+    while (name === "" || name === null) {
+        name = prompt("What is your robot's name?");
+    }
+    console.log("Your robot's name is " + name);
+    return name;
+};
+
+/*GAME INFORMATION/VARIABLES*/
+
+//player information
 var playerInfo = {
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -170,7 +211,7 @@ var playerInfo = {
             }
         }
 };
-
+//enemy information
 var enemyInfo = [
     {
         name: "Roberto",
@@ -184,6 +225,14 @@ var enemyInfo = [
         name: "Robo Trumble",
         attack: randomNumber(10,14)
     }
-];    
-//start the game when the page loads
+]; 
+
+console.log(enemyInfo);
+console.log(enemyInfo[0]);
+console.log(enemyInfo[0].name);
+console.log(enemyInfo[0]['attack']);
+
+/* END GAME INFORMATION / VARIABLES */
+
+/*RUN GAME*/
 startGame();
